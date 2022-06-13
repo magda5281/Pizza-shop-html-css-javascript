@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;900&family=Nanum+Gothic+Coding&family=Roboto:wght@100;400;900&display=swap"
+      rel="stylesheet">
+    <!-- <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="main.css" type="text/css">
+    <title>Basket</title>
+    <script src="./app.js" type="module" type="text/javascript" async> </script>
+    async> </script>
+    async></script>
+  </head>
+
+  <body>
+    <header>
+      <nav class='nav'>
+        <a href="/" class='logo'><img src="images\Dominos-logo.png"
+            alt="dominos logo"></a>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="./pizzas.html" target="_blank">Pizzas</a></li>
+          <li><a href="./sides.html" target="_blank">Sides</a></li>
+          <li><a href="./drinks.html" target="_blank">Drinks</a></li>
+          <li><a href='basket.html' target="_blank">
+              <button class="btn btn__success basket__button">Basket
+                <span class="basket__button__quantity">0</span></button>
+            </a>
+          </li>
+        </ul>
+
+      </nav>
+    </header>
+    <main class="container">
+      <h2>View Your Basket </h2>
+      <section class="basket">
+        <div class="basket__items">
+        </div>
+        <div class="basket__row basket__total">
+          <strong class="basket__totalTitle basket__itemTitle">Total</strong>
+          <span class="basket__totalPrice ">£0.00</span>
+        </div>
+        <button class="btn btn__success btn__purchase"
+          type="button">Order</button>
+      </section>
+    </main>
+    <script src="./app.js" type="module" type="text/javascript" async> </script>
+  </body>
+
+</html>
