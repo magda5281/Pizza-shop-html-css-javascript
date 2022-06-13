@@ -7,11 +7,11 @@ const gluteFree = data[2].glutenFree;
 const sides = data[3].sides;
 const drinks = data[4].drinks
 
-const homePageUrl = "http://127.0.0.1:5500/Pizza%20shop-html-css-javascript/";
-const pizzaPageUrl = "http://127.0.0.1:5500/Pizza%20shop-html-css-javascript/pizzas.html";
-const sidesPageUrl = "http://127.0.0.1:5500/Pizza%20shop-html-css-javascript/sides.html";
-const basketPageUrl = "http://127.0.0.1:5500/Pizza%20shop-html-css-javascript/basket.html";
-const drinksPageUrl = "http://127.0.0.1:5500/Pizza%20shop-html-css-javascript/drinks.html";
+const homePageUrl = "http://127.0.0.1:5500/index.html";
+const pizzaPageUrl = "http://127.0.0.1:5500/pizzas.html";
+const sidesPageUrl = "http://127.0.0.1:5500/sides.html";
+const basketPageUrl = "http://127.0.0.1:5500/basket.html";
+const drinksPageUrl = "http://127.0.0.1:5500/drinks.html";
 const url = window.document.documentURI;
 
 if (url == null) {
