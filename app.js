@@ -142,7 +142,7 @@ if (url == basketPageUrl && isLoaded()) {
       const sizeElement = !el.size ? `<span class="basket__itemSize"> </span>` : `<span class="basket__itemSize">${el.size} </span>`;
       const crustElement = !el.crust ? `<span class="basket__itemCrust"> </span>` : `<span class="basket__itemCrust">${el.crust} </span>`;
       const basketRowContents = `
-            <div class="basket__item ">
+            <div class="basket__item  ">
               <img src=${el.imageSrc} 
                 class="basket__image">
               <div class="basket__itemInfo">
@@ -183,6 +183,8 @@ if (url == basketPageUrl && isLoaded()) {
     //to keep the total to max 2 decimal places
     total = total.toFixed(2);
     document.getElementsByClassName("basket__totalPrice")[0].innerText = '£' + total;
+    document.querySelector(".basket__button__price").innerText =  '£' + total;
+    
   }
   updateBasketTotal();
   updateBasketIcon();
@@ -199,7 +201,8 @@ if (url == basketPageUrl && isLoaded()) {
   const quantityInputs = document.getElementsByClassName('basket__quantityInput');
   for (let i = 0; i < quantityInputs.length; i++) {
     let quantity = quantityInputs[i];
-    quantity.addEventListener('change', quantityChanged)
+    quantity.addEventListener('change', quantityChanged);
+    quantity.addEventListener('change', updateLocalStorageQuantity);
   }
 
   //add event listener to order button 
@@ -211,7 +214,15 @@ if (url == basketPageUrl && isLoaded()) {
 
   function submitOrder(event) {
     let submit = event.target
-    let order = loadData('orders', [])
+    let localStoratgeData = loadData('orders', [])
+
+ localStoratgeData.forEach((el) => {
+   delete el.imageSrc;
+   delete el.desc;
+    
+    }
+       
+    )
   
 Email.send({
     Host : "smtp.gmail.com",
@@ -220,8 +231,9 @@ Email.send({
     To : 'recipient@example.com',
     From : "sender@example.com",
     Subject : "Test email",
-    Body : `order: id:${order.id}, ${order.key}, ${order.title} size: ${order.size}, crust: ${order.crust} `
+    Body : localStoratgeData
 }).then(function () {
+
   alert("Thank you for your order!")
 }).then(() => {
   localStorage.clear();
@@ -241,15 +253,54 @@ Email.send({
   }
 
   function quantityChanged(event) {
-    let quantityInput = event.target;
-    console.log(quantityInput)
+    let quantityInputValue = event.target.value;
     //  check if the input is a valid number 
-    if (isNaN(quantityInput.value) || quantityInput.value <= 0) {
-      quantityInput.value = 1;
+    if (isNaN(quantityInputValue) || quantityInputValue <= 0) {
+      quantityInputValue = 1;
     }
     updateBasketTotal();
+   
   }
+
+
   // TODO:// when quantity changes get the item from local storage add another item to local storage  the basket icon v
+
+  function updateLocalStorageQuantity(event) {
+  
+    let quantityInputEl = event.target;
+    let productContainer = quantityInputEl.parentElement.parentElement.parentElement;
+    const title = productContainer.getElementsByClassName("basket__itemTitle")[0].innerText;
+    const size = productContainer.getElementsByClassName('basket__itemSize')[0].innerText;
+    const crust = productContainer.getElementsByClassName('basket__itemCrust')[0].innerText;
+    let newQuantity = quantityInputEl.value;
+   
+    let orders = loadData('orders', []);
+   
+       for (let i = 0; i < orders.length; i++) {
+      if (orders[i].key == "pizza") {
+        if (orders[i].title == title && orders[i]?.size == size && orders[i]?.crust == crust) {
+          console.log(newQuantity)
+          console.log(orders[i]) 
+          console.log(orders[i].quantity)
+          orders[i].quantity = newQuantity;
+          console.log("after update in browser" + orders[i].quantity)
+          console.log(orders[i])
+          orders[i].quantity = parseInt(newQuantity);
+       
+         
+        }
+      } else {
+        if (orders[i].title == title) {
+        orders[i].quantity = newQuantity;
+     
+         
+        }
+         }
+         saveOrdersToLocalStroage(orders);
+         updateBasketIcon();
+
+    }
+  }
 
   function removeFromStorage(buttonClicked) {
 
@@ -259,12 +310,11 @@ Email.send({
     const crust = productContainer.getElementsByClassName('basket__itemCrust')[0].innerText;
 
     let orders = loadData('orders', []);
-    console.log(orders)
+  
     for (let i = 0; i < orders.length; i++) {
       if (orders[i].key == "pizza") {
         if (orders[i].title == title && orders[i]?.size == size && orders[i]?.crust == crust) {
           let removeItemIndex = orders.indexOf(orders[i]);
-          console.log(removeItemIndex)
           orders.splice(removeItemIndex, 1);
           saveOrdersToLocalStroage(orders);
           updateBasketIcon();
@@ -272,7 +322,6 @@ Email.send({
       } else {
         if (orders[i].title == title) {
           let removeItemIndex = orders.indexOf(orders[i]);
-          console.log(removeItemIndex)
           orders.splice(removeItemIndex, 1);
           saveOrdersToLocalStroage(orders);
           updateBasketIcon();
@@ -374,8 +423,13 @@ window.addEventListener('storage', updateBasketIcon);
 
 function updateBasketIcon() {
   let basketBtnQuantity = document.getElementsByClassName('basket__button__quantity')[0];
-  const ordersQuantity = JSON.parse(localStorage.getItem("orders"))?.length || 0;
-  basketBtnQuantity.innerText = ordersQuantity
+  let orders = loadData('orders', []);
+  let quantity=0;
+  orders.forEach((el) => {
+    quantity = quantity + el.quantity;
+  })
+
+  basketBtnQuantity.innerText = quantity;
 }
 
 //if there is nothing in storage it will return empty array otherwise it will return data from local Storage 
