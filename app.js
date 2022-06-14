@@ -116,13 +116,13 @@ const createNewArticle = async (data, section, key) => {
   });
 }
 
-// if sidesPage is laoded render the elemnts 
+// if sidesPage is loaded render the elements 
 if (url == sidesPageUrl && isLoaded()) {
   const sidesSection = document.getElementById("sides");
   createNewArticle(sides, sidesSection, Object.keys(data[3])[0]);
   updateBasketIcon();
 }
-// if drinksPage is laoded reander the elemnts 
+// if drinksPage is loaded reander the elements 
 if (url == drinksPageUrl && isLoaded()) {
   const drinksSection = document.getElementById("drinks");
   createNewArticle(drinks, drinksSection, Object.keys(data[4])[0]);
@@ -202,6 +202,35 @@ if (url == basketPageUrl && isLoaded()) {
     quantity.addEventListener('change', quantityChanged)
   }
 
+  //add event listener to order button 
+  const orderBtn = document.getElementById("order__button");
+  orderBtn.addEventListener("click", submitOrder);
+
+
+  //send order
+
+  function submitOrder(event) {
+    let submit = event.target
+    let order = loadData('orders', [])
+  
+Email.send({
+    Host : "smtp.gmail.com",
+    Username : "sender@email_address.com",
+    Password : "<Mailtrap password>",
+    To : 'recipient@example.com',
+    From : "sender@example.com",
+    Subject : "Test email",
+    Body : `order: id:${order.id}, ${order.key}, ${order.title} size: ${order.size}, crust: ${order.crust} `
+}).then(function () {
+  alert("Thank you for your order!")
+}).then(() => {
+  localStorage.clear();
+  updateBasketIcon();
+  redirect(basketPageUrl, homePageUrl);
+        })
+    
+  }
+
   //remove item from basket and call update function to update the total price and local storage
   function removeBasketItem(event) {
     let buttonClicked = event.target;
@@ -250,14 +279,10 @@ if (url == basketPageUrl && isLoaded()) {
         }
       }
 
-
-
     }
 
     if (orders.length == 0) {
-      console.log("you hv=ave no orders in your basket")
-      const url = window.location.href.replace(basketPageUrl, pizzaPageUrl)
-      window.location.href = url;
+     redirect(basketPageUrl, pizzaPageUrl)
     }
 
   }
@@ -359,7 +384,12 @@ function loadData(orders, def) {
   return null == data ? def : JSON.parse(data);
 }
 
+//redirect to pizza page
 
+function redirect(pageFrom, pageTo) {
+  const url = window.location.href.replace(pageFrom, pageTo);
+      window.location.href = url;
+}
 
 
 
