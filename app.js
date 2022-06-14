@@ -1,7 +1,6 @@
 import data from "./data.js";
 
 const standardPizzas = data[0].standard;
-console.log(Object.keys(data[0])[0])
 const veganPizzas = data[1].vegan;
 const gluteFree = data[2].glutenFree;
 const sides = data[3].sides;
